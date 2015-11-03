@@ -1,16 +1,15 @@
 # Overview
 
-![campbellschunkystring](https://cloud.githubusercontent.com/assets/8798975/10805688/e5cefff0-7d8c-11e5-972b-b8bf31a96b0a.png)
+![chunkystringphone](https://cloud.githubusercontent.com/assets/8798975/10922746/ce70ac92-8231-11e5-94ba-c3f806c5c9e5.png)
 
 In this assignment, you'll implement the rest of the `ChunkyString` class you tested and wrote pseudocode for in
 Assignment~6. You'll also use that class in a program to model noisy message-passing.
  
-# Reading
-In addition to reading this assignment, we strongly recommend the following resources:
-
 # Steps
-There are issues to complete for this assignment:
-1. 
+There are 3 issues to complete for this assignment:
+1. Finish ChunkyString
+1. Understand Starter Code
+1. Model Noisy Transmission
 
 # Grading
 Your submission will be graded as follows: 
