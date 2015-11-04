@@ -28,7 +28,7 @@ using namespace std;
  * \param filename      Name of file to read original message from
  * \param noiseLevel    Likelihood of a character being modified
  */
-void processOptions(std::list<std::string> options,
+void processOptions(list<string> options,
 		    string& filename,
                     float& noiseLevel)
 {
@@ -39,11 +39,12 @@ void processOptions(std::list<std::string> options,
     string flag;
     string value;
     while (!options.empty()) {
+    	// Command line arguments are parsed in flag/value pairs
         flag = options.front();
         options.pop_front();
 
         if (options.empty()) {
-            std::cerr << "Empty argument" << std::endl;
+            cerr << "Empty argument" << endl;
             exit(2);
         };
 
@@ -55,7 +56,7 @@ void processOptions(std::list<std::string> options,
         } else if (flag == "-f" || flag == "--filename") {
             filename = value;
         } else {
-            cerr << "Unrecognized option: " << flag << std::endl;
+            cerr << "Unrecognized option: " << flag << endl;
             cerr << "Usage: ./messagePasser -n noise -f filename" << endl;
             exit(2);
         }
@@ -71,31 +72,29 @@ int main(int argc, const char* argv[])
     float noiseLevel = 0;
     string fileName;
 
-    std::list<std::string> options(argv + 1, argv + argc);
+    list<string> options(argv + 1, argv + argc);
     processOptions(options, fileName, noiseLevel);
 
     ifstream fileReader( fileName );
 
-    if ( !fileReader.is_open() ) {
+    if (!fileReader.is_open()) {
         // The file could not be opened
         cerr << "Unable to read from file" << fileName << endl;
         exit(-1);
-    }
-    else {
+    } else {
         // Safely use the file stream
         string messageLine; 
-        ChunkyString::ChunkyString message;
+        ChunkyString message;
 
 	while (getline(fileReader, messageLine)) {
   	    message += messageLine + "\n";
 	}
 
-	NoisyTransmission::NoisyTransmission transmissionLine{noiseLevel};
+	NoisyTransmission transmissionLine{noiseLevel};
 	transmissionLine.transmit(message);
 
         cout << message << endl;
         return 0;
     }
-
 
 }
