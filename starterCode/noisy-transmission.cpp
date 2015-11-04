@@ -31,7 +31,7 @@ float NoisyTransmission::getRandomFloat() {
     return dis_(gen_);
 }
 
-void NoisyTransmission::transmit(ChunkyString::ChunkyString& message) 
+void NoisyTransmission::transmit(ChunkyString& message) 
 {
   //std::cerr << "Not implemented yet" << std::endl;
 }
