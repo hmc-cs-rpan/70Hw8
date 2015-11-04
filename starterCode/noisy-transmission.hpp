@@ -22,7 +22,7 @@
 class NoisyTransmission {
 public:
     NoisyTransmission(float errorRate);
-    void transmit(ChunkyString::ChunkyString& message);
+    void transmit(ChunkyString& message);
     float getRandomFloat();
   
 private:
