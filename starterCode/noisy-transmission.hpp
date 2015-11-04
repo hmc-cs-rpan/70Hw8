@@ -1,14 +1,10 @@
 /**
- * \file noisytransmit.cpp
- * \author Fill me in!
+ * \file noisytransmit.hpp
+ * \author CS70 Provided Code
  *
  * \brief Defines the noisyTransmit() function for stepping through a 
  * chunkystring and randomly doubling, erasing, or leaving each character
  * unchanged.
- *
- * \details
- *
- * \remarks
  *
  */
 
