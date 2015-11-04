@@ -1,10 +1,6 @@
 /**
  * \file message-passer.cpp
- * \author Fill me in!
- *
- *
- * \remarks
- *
+ * \author CS70 Provided Code
  */
 
 #include <iostream>
@@ -24,7 +20,6 @@ using namespace std;
  *   Will return with an exit error of 2 if receives a usage problem.
  *
  * \param options       Input of options from command line.
- * \param seed          Optional seed value for random number generator
  * \param filename      Name of file to read original message from
  * \param noiseLevel    Likelihood of a character being modified
  */
@@ -33,9 +28,8 @@ void processOptions(list<string> options,
                     float& noiseLevel)
 {
 
-    // Loop through the options. If they start with a dash
-    // try to interpret them as a flag; if not, assume it's
-    // the number of insertions.
+    // Takes two things off the list at a time. The first one is a flag, the
+    // second is the argument to the flag.
     string flag;
     string value;
     while (!options.empty()) {
@@ -52,7 +46,7 @@ void processOptions(list<string> options,
 	options.pop_front();
 
 	if (flag == "-n" || flag == "--noise") {
-	    noiseLevel = stod(value);
+	    noiseLevel = stof(value);
         } else if (flag == "-f" || flag == "--filename") {
             filename = value;
         } else {
@@ -62,7 +56,10 @@ void processOptions(list<string> options,
         }
     }
 
-    return;
+    if (fileName.empty()) {
+        cerr << "Filename not specfied" << endl;
+        exit(2);
+    }
 }
 
 
@@ -72,6 +69,9 @@ int main(int argc, const char* argv[])
     float noiseLevel = 0;
     string fileName;
 
+    // Construct a list of options that goes from the 2nd element of argv to
+    // the last one. We don't care about the first element because it's just
+    // the same of the program
     list<string> options(argv + 1, argv + argc);
     processOptions(options, fileName, noiseLevel);
 
@@ -80,16 +80,16 @@ int main(int argc, const char* argv[])
     if (!fileReader.is_open()) {
         // The file could not be opened
         cerr << "Unable to read from file" << fileName << endl;
-        exit(-1);
+        exit(1);
     } else {
         // Safely use the file stream
-        string messageLine; 
         ChunkyString message;
 
-	while (getline(fileReader, messageLine)) {
-  	    message += messageLine + "\n";
+        char c;
+	while (fileReader.get(c)) {
+  	    message.push_back(c);
 	}
-
+	
 	NoisyTransmission transmissionLine{noiseLevel};
 	transmissionLine.transmit(message);
 
