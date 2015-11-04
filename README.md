@@ -6,10 +6,10 @@ In this assignment, you'll implement the rest of the `ChunkyString` class you te
 Assignment~6. You'll also use that class in a program to model noisy message-passing.
  
 # Steps
-There are 3 issues to complete for this assignment:
-1. Finish ChunkyString
-1. Understand Starter Code
-1. Model Noisy Transmission
+There are 3 issues to complete for this assignment:  
+1. Finish ChunkyString  
+2. Understand Starter Code  
+3. Model Noisy Transmission
 
 # Grading
 Your submission will be graded as follows: 
