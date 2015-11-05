@@ -71,7 +71,7 @@ int main(int argc, const char* argv[])
 
     // Construct a list of options that goes from the 2nd element of argv to
     // the last one. We don't care about the first element because it's just
-    // the same of the program
+    // the name of the program
     list<string> options(argv + 1, argv + argc);
     processOptions(options, fileName, noiseLevel);
 
