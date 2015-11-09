@@ -56,7 +56,7 @@ void processOptions(list<string> options,
         }
     }
 
-    if (fileName.empty()) {
+    if (filename.empty()) {
         cerr << "Filename not specfied" << endl;
         exit(2);
     }
