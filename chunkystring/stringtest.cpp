@@ -22,6 +22,7 @@
 #endif
 
 #define INSERT_ERASE 0 // 0 = Do not test. 1 = Do test.
+#define INSERT_ 1
 
 
 #if LOAD_GENERIC_STRING
@@ -404,7 +405,7 @@ void assignTest(const TestingString& lhs, const TestingString& rhs)
     EXPECT_TRUE(lhsPush != rhs);
     EXPECT_TRUE(rhs < lhsPush);
 
-#if INSERT_ERASE
+#if INSERT_
     // Deep copy by insert
     TestingString lhsInsert(lhs);
     lhsInsert = rhs;
@@ -539,7 +540,7 @@ TEST_F(DualArguments, equality)
         }
     }
 
-#if INSERT_ERASE
+#if INSERT_
     TestingString pushBack;
     TestingString insert;
 
@@ -648,7 +649,7 @@ TEST(modifyChars, iterate)
     EXPECT_EQ(*iter, *iter2);
 }
 
-#if INSERT_ERASE
+#if INSERT_
 /**
  * \brief Create a long string using insert.
  *

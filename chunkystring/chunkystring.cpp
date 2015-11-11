@@ -29,6 +29,14 @@ ChunkyString::ChunkyString(const ChunkyString& orig)
     }
 }
 
+void ChunkyString::swap(ChunkyString& rhs)
+{
+    using std::swap;
+
+    swap(chunks_, rhs.chunks_);
+    swap(size_, rhs.size_);
+}
+
 ChunkyString::iterator ChunkyString::begin() 
 {
     return Iterator<false>(chunks_.begin(), 0);
@@ -105,9 +113,23 @@ ChunkyString::iterator ChunkyString::insert(iterator i, char c)
         std::list<Chunk>::iterator nextChunk = i.chunk_;
         ++nextChunk;
 
-        // check the length of the previous/next Chunk
-        size_t prevLength = prevChunk->length_;
-        size_t nextLength = nextChunk->length_;
+
+        // check the length of the previous/next Chunk, checking for nullptrs
+
+        size_t prevLength = 0;
+        size_t nextLength = 0;
+
+        if(i.chunk_ != chunks_.begin())
+        {
+            prevLength = prevChunk->length_;
+        }
+        ChunkyString::iterator lastChunkPtr = chunks_.end();
+        --lastChunkPtr;
+
+        if(i.chunk_ != lastChunkPtr)
+        {
+            nextLength = nextChunk->length_;
+        }
 
         // if sum of lengths>CHUNKSIZE, insert new Chunk after current Chunk
         if(prevLength + nextLength > CHUNKSIZE)
@@ -186,12 +208,94 @@ ChunkyString::iterator ChunkyString::insert(iterator i, char c)
             i.chunk_->chars_[i.charInd_] = c;
             ++i.chunk_->length_;
         }
+
+        else // if prevLength > nextLength
+        {
+            Chunk newChunk = Chunk(0, CHUNKSIZE);
+            chunks_.insert(nextChunk, newChunk);
+
+            // adjust the iterator to nextChunk
+            nextChunk = i.chunk_;
+            ++nextChunk;
+
+            for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
+            {
+                // copying over the last half of chars in current Chunk
+                // to new Chunk
+                nextChunk->chars_[ind] = i.chunk_->chars_[CHUNKSIZE/2 + ind];
+                --i.chunk_->length_;
+                ++nextChunk->length_;
+            }
+
+            // create an iterator pointing to chunk after nextChunk,
+            // to be deleted after copying elements
+
+            std::list<Chunk>::iterator delChunk = nextChunk;
+            ++delChunk;
+
+            for(size_t ind = 0; ind < delChunk->length_; ++ind)
+            {
+                // appending the chars in delChunk to the end of the nextChunk
+                nextChunk->chars_[nextChunk->length_] = delChunk->chars_[ind];
+                ++nextChunk->length_;
+                --delChunk->length_;
+            }
+
+            // erase the redundant Chunk
+            chunks_.erase(delChunk);
+
+            // check to see if iterator changed from copying elements
+            if(i.charInd_ > CHUNKSIZE/2)
+            {
+                i = iterator(nextChunk, i.charInd_ - CHUNKSIZE/2);
+            }
+
+            // make room for extra element in array by shifting all elements
+            // after insert position by 1 index
+            for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
+            {
+                i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
+            }
+
+            // finally, insert the character into the Chunk
+            i.chunk_->chars_[i.charInd_] = c;
+            ++i.chunk_->length_;
+
+        }
+
+        
     }
+
+    else // if Chunk iterator points to is not full
+    {
+        // make room for extra element in array by shifting all elements
+        // after insert position by 1 index
+        for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
+        {
+            i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
+        }
+
+        // finally, insert the character into the Chunk
+        i.chunk_->chars_[i.charInd_] = c;
+        ++i.chunk_->length_;
+    }
+
+    // increment our iterator to point to inserted char
+    ++i.charInd_;
+    return i;
 }
 
 size_t ChunkyString::size() const
 {
     return size_;
+}
+
+ChunkyString& ChunkyString::operator=(const ChunkyString& rhs)
+{
+    // Assignment is implemented idiomatically using the "swap trick"
+    ChunkyString copy = rhs;
+    swap(copy);
+    return *this;
 }
 
 bool ChunkyString::operator==(const ChunkyString& rhs) const

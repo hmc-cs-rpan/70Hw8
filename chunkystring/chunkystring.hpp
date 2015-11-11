@@ -56,6 +56,7 @@ public:
 
     ~ChunkyString() = default;
 
+    void swap(ChunkyString& rhs);
     /**
      * \brief Copy constructor
      */
@@ -85,6 +86,9 @@ public:
     static const size_t CHUNKSIZE = 12;
     
     ChunkyString& operator+=(const ChunkyString& rhs); ///< String concatenation
+
+    /// Assignment operator
+    ChunkyString& operator=(const ChunkyString& rhs);
 
     bool operator==(const ChunkyString& rhs) const;    ///< String equality
     bool operator!=(const ChunkyString& rhs) const;    ///< String inequality
