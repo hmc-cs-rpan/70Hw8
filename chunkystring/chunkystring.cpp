@@ -107,182 +107,117 @@ ChunkyString::iterator ChunkyString::insert(iterator i, char c)
     // if current Chunk is full
     if(i.chunk_->length_ == CHUNKSIZE)
     {
-        // use STL to access previous and next Chunks
-        std::list<Chunk>::iterator prevChunk = i.chunk_;
-        --prevChunk;
+        // create a Chunk iterator to the Chunk after current Chunk
         std::list<Chunk>::iterator nextChunk = i.chunk_;
         ++nextChunk;
 
+        Chunk newChunk = Chunk(0, CHUNKSIZE);
+        nextChunk = chunks_.insert(nextChunk, newChunk);
 
-        // check the length of the previous/next Chunk, checking for nullptrs
-
-        size_t prevLength = 0;
-        size_t nextLength = 0;
-
-        if(i.chunk_ != chunks_.begin())
+        // copying over the last half of chars in current Chunk to new Chunk
+        for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
         {
-            prevLength = prevChunk->length_;
-        }
-        ChunkyString::iterator lastChunkPtr = chunks_.end();
-        --lastChunkPtr;
+            // fills newChunk with chars from current Chunk
+            nextChunk->chars_[ind] = i.chunk_->chars_[CHUNKSIZE/2 + ind];
 
-        if(i.chunk_ != lastChunkPtr)
+            // adjusts Chunk lengths
+            --i.chunk_->length_;
+            ++nextChunk->length_;
+        } 
+
+        // check to see if iterator changed from copying elements
+        if(i.charInd_ > CHUNKSIZE/2)
         {
-            nextLength = nextChunk->length_;
-        }
-
-        // if sum of lengths>CHUNKSIZE, insert new Chunk after current Chunk
-        if(prevLength + nextLength > CHUNKSIZE)
-        {
-            Chunk newChunk = Chunk(0, CHUNKSIZE);
-            chunks_.insert(nextChunk, newChunk);
-
-            // adjust the iterator to nextChunk
-            nextChunk = i.chunk_;
-            ++nextChunk;
-
-            for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
-            {
-                // copying over the last half of chars in current Chunk
-                // to new Chunk
-                nextChunk->chars_[ind] = i.chunk_->chars_[CHUNKSIZE/2 + ind];
-                --i.chunk_->length_;
-                ++nextChunk->length_;
-            }
-
-            // check to see if iterator changed from copying elements
-            if(i.charInd_ > CHUNKSIZE/2)
-            {
-                i = iterator(nextChunk, i.charInd_ - CHUNKSIZE/2);
-            }
-
-            // making room for extra element in array by shifting all elements
-            // after insert position by 1 index
-            for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
-            {
-                i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
-            }
-
-            // finally, insert the character into the Chunk
-            i.chunk_->chars_[i.charInd_] = c;
-            ++i.chunk_->length_;
+            i = iterator(nextChunk, i.charInd_ - CHUNKSIZE/2);
         }
 
-        if(prevLength <= nextLength)
-        {
-            for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
-            {
-                // appending the first half of chars in current Chunk
-                // to the end of the previous Chunk
-                prevChunk->chars_[prevChunk->length_] = i.chunk_->chars_[ind];
-                ++prevChunk->length_;
-                --i.chunk_->length_;
-            }
-
-            // readjust the iterator to point to the right char
-            if(i.charInd_ >= CHUNKSIZE/2)
-            {
-                i = iterator(i.chunk_, i.charInd_ - CHUNKSIZE/2);
-            }
-            else
-            {
-                i = iterator(prevChunk, i.charInd_ + prevLength);
-            }
-
-            // places the elements from the last half of the current Chunk
-            // into the beginning of the Chunk
-            for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
-            {
-                i.chunk_->chars_[ind] = i.chunk_->chars_[ind + CHUNKSIZE/2];
-                --i.chunk_->length_;
-            }
-
-            // making room for extra element in array by shifting all elements
-            // after insert position by 1 index
-            for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
-            {
-                i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
-            }
-
-            // finally, insert the character into the Chunk
-            i.chunk_->chars_[i.charInd_] = c;
-            ++i.chunk_->length_;
-        }
-
-        else // if prevLength > nextLength
-        {
-            Chunk newChunk = Chunk(0, CHUNKSIZE);
-            chunks_.insert(nextChunk, newChunk);
-
-            // adjust the iterator to nextChunk
-            nextChunk = i.chunk_;
-            ++nextChunk;
-
-            for(size_t ind = 0; ind < CHUNKSIZE/2; ++ind)
-            {
-                // copying over the last half of chars in current Chunk
-                // to new Chunk
-                nextChunk->chars_[ind] = i.chunk_->chars_[CHUNKSIZE/2 + ind];
-                --i.chunk_->length_;
-                ++nextChunk->length_;
-            }
-
-            // create an iterator pointing to chunk after nextChunk,
-            // to be deleted after copying elements
-
-            std::list<Chunk>::iterator delChunk = nextChunk;
-            ++delChunk;
-
-            for(size_t ind = 0; ind < delChunk->length_; ++ind)
-            {
-                // appending the chars in delChunk to the end of the nextChunk
-                nextChunk->chars_[nextChunk->length_] = delChunk->chars_[ind];
-                ++nextChunk->length_;
-                --delChunk->length_;
-            }
-
-            // erase the redundant Chunk
-            chunks_.erase(delChunk);
-
-            // check to see if iterator changed from copying elements
-            if(i.charInd_ > CHUNKSIZE/2)
-            {
-                i = iterator(nextChunk, i.charInd_ - CHUNKSIZE/2);
-            }
-
-            // make room for extra element in array by shifting all elements
-            // after insert position by 1 index
-            for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
-            {
-                i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
-            }
-
-            // finally, insert the character into the Chunk
-            i.chunk_->chars_[i.charInd_] = c;
-            ++i.chunk_->length_;
-
-        }
-
-        
+        // inserts char c into the proper space in the Chunk's char[]
+        helperInsert(i, c);
     }
 
     else // if Chunk iterator points to is not full
     {
-        // make room for extra element in array by shifting all elements
-        // after insert position by 1 index
-        for(size_t ind = i.chunk_->length_ - 1; ind >= i.charInd_ ; ++ind)
-        {
-            i.chunk_->chars_[ind + 1] = i.chunk_->chars_[ind];
-        }
-
-        // finally, insert the character into the Chunk
-        i.chunk_->chars_[i.charInd_] = c;
-        ++i.chunk_->length_;
+        // inserts char c into the proper space in the Chunk's char[]
+        helperInsert(i, c);
     }
 
     // increment our iterator to point to inserted char
     ++i.charInd_;
+    ++size_;
     return i;
+}
+
+ChunkyString::iterator ChunkyString::erase(iterator i)
+{
+    if(i == end())
+    {
+        std::cout << "Invalid iterator, please try again" << std::endl;
+    }
+
+    // if the iterator points to the last char in an array
+    else if(i.charInd_ == i.chunk_->length_ - 1)
+    {
+        // decrement length by 1
+        --i.chunk_->length_;
+    }
+
+    else // iterator will be pointing inside an array
+    {
+        for(size_t ind = i.charInd_; ind < i.chunk_->length_ - 1; ++ind)
+        {
+            // shifts all the elements after iterator position back 1 index
+            i.chunk_->chars_[ind] = i.chunk_->chars_[ind + 1];
+        }
+        --i.chunk_->length_;
+    }
+    --size_;
+    return i;
+}
+
+void ChunkyString::reflow()
+{
+    // creates two iterators to loop through the list of Chunks
+    std::list<Chunk>::iterator currChunk = chunks_.begin();
+    std::list<Chunk>::iterator nextChunk = currChunk;
+    ++nextChunk;
+
+    while(utilization() < 1/4)
+    {
+        if(currChunk->length_ + nextChunk->length_ < CHUNKSIZE)
+        {
+            // append elements of nextChunk to CurrChunk
+            for(size_t ind = 0; ind < nextChunk->length_; ++ind)
+            {
+                currChunk->chars_[currChunk->length_ + ind] = 
+                nextChunk->chars_[ind];
+            }
+
+            // accounts for the change in length from adding chars
+            currChunk->length_ += nextChunk->length_;
+            nextChunk = chunks_.erase(nextChunk);
+        }
+        else
+        {
+            ++currChunk;
+            ++nextChunk;
+        }
+    }
+}
+
+void ChunkyString::helperInsert(iterator& i, char c)
+{
+    size_t length = i.chunk_->length_;
+    size_t charInd = i.charInd_;
+    // making room for extra element in array by shifting all elements
+    // after insert position down by 1 index
+    for(size_t ind = 0; ind < length - charInd; ++ind)
+    {
+        i.chunk_->chars_[length - ind] = i.chunk_->chars_[length - ind - 1];
+    }
+
+    // finally, insert the character into the Chunk
+    i.chunk_->chars_[charInd] = c;
+    ++i.chunk_->length_;
 }
 
 size_t ChunkyString::size() const

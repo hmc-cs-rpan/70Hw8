@@ -148,6 +148,22 @@ public:
      */
     double utilization() const;
 
+    /**
+    * \brief A helper function to increase utilization past 1/4.
+    * \details 
+    *   This function iterates through the Chunks of the ChunkyString and
+    *   combines Chunks with substandard utilization until utilzation > 1/4.
+    */
+    void reflow();
+
+    /**
+    * \brief A helper function to shift elements in an array and insert a char.
+    * \details 
+    *   This function iterates through the Chunks of the ChunkyString and
+    *   combines Chunks with substandard utilization until utilzation > 1/4.
+    */
+    void helperInsert(iterator& i, char c);
+
 private:
     /***
      * \struct Chunk

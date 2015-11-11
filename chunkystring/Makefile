@@ -39,7 +39,7 @@ messagepasser:	$(MESSAGEPASSER_OBJS)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ -lpthread $(MESSAGEPASSER_OBJS) \
 
 test: stringtest-ours
-		./stringtest-ours
+	./stringtest-ours
 
 clean:
 	rm -f $(TARGETS) $(ALL_OBJS)
@@ -56,4 +56,3 @@ stringtest.o: stringtest.cpp chunkystring.hpp iterator-private.hpp
 stringtest-ours.o: stringtest-ours.cpp chunkystring.hpp iterator-private.hpp
 chunkystring.o: chunkystring.cpp chunkystring.hpp iterator-private.hpp
 message-passer.o: chunkystring.cpp chunkystring.hpp iterator-private.hpp noisy-transmission.cpp noisy-transmission.hpp
-
