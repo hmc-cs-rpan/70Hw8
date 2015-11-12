@@ -33,5 +33,18 @@ float NoisyTransmission::getRandomFloat() {
 
 void NoisyTransmission::transmit(ChunkyString& message) 
 {
-  //std::cerr << "Not implemented yet" << std::endl;
+	float prob = 0;
+	for(ChunkyString::iterator i = message.begin(); i != message.end(); ++i)
+	{
+		prob = getRandomFloat();
+		if(prob < errorRate_)
+		{
+			message.erase(i);
+		}
+		else if(prob > 1-errorRate_)
+		{
+			char toInsert = *i;
+			message.insert(i, toInsert);
+		}
+	}
 }

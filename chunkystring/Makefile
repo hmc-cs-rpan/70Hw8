@@ -38,8 +38,8 @@ stringtest-ours:	$(STRINGTEST-OURS_OBJS)
 messagepasser:	$(MESSAGEPASSER_OBJS)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ -lpthread $(MESSAGEPASSER_OBJS) \
 
-test: stringtest-ours
-	./stringtest-ours
+test: stringtest
+	./stringtest
 
 clean:
 	rm -f $(TARGETS) $(ALL_OBJS)

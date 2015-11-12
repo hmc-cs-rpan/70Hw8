@@ -154,13 +154,16 @@ public:
     *   This function iterates through the Chunks of the ChunkyString and
     *   combines Chunks with substandard utilization until utilzation > 1/4.
     */
-    void reflow();
+    iterator reflow(iterator i);
 
     /**
     * \brief A helper function to shift elements in an array and insert a char.
     * \details 
     *   This function iterates through the Chunks of the ChunkyString and
     *   combines Chunks with substandard utilization until utilzation > 1/4.
+    * \param i     iterator pointing to a character
+    *
+    * \returns an iterator pointing the same spot of parameter
     */
     void helperInsert(iterator& i, char c);
 

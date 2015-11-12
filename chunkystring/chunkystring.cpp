@@ -141,8 +141,6 @@ ChunkyString::iterator ChunkyString::insert(iterator i, char c)
         helperInsert(i, c);
     }
 
-    // increment our iterator to point to inserted char
-    ++i.charInd_;
     ++size_;
     return i;
 }
@@ -154,14 +152,30 @@ ChunkyString::iterator ChunkyString::erase(iterator i)
         std::cout << "Invalid iterator, please try again" << std::endl;
     }
 
+    else if(i.chunk_->length_ <= 1)
+    {
+        if(i.chunk_->length_ == 1)
+        {
+            --size_;
+        }
+        // erase the one char chunk we are pointing to
+        std::list<Chunk>::iterator delChunk = chunks_.erase(i.chunk_);
+        
+        // fix iterator to point to first element of nextChunk
+        i = ChunkyString::iterator(delChunk, 0);
+    }
+
     // if the iterator points to the last char in an array
     else if(i.charInd_ == i.chunk_->length_ - 1)
     {
         // decrement length by 1
         --i.chunk_->length_;
+        --i;
+        --size_;
     }
 
-    else // iterator will be pointing inside an array
+    else if(i.charInd_ > 1 && i.charInd_ < i.chunk_->length_ - 1)
+    // iterator will be pointing inside an array
     {
         for(size_t ind = i.charInd_; ind < i.chunk_->length_ - 1; ++ind)
         {
@@ -169,40 +183,70 @@ ChunkyString::iterator ChunkyString::erase(iterator i)
             i.chunk_->chars_[ind] = i.chunk_->chars_[ind + 1];
         }
         --i.chunk_->length_;
+        --size_;
     }
-    --size_;
+
+    if(utilization() < 0.25)
+    {
+        i=reflow(i);
+    }
+
     return i;
 }
 
-void ChunkyString::reflow()
+ChunkyString::iterator ChunkyString::reflow(iterator i)
 {
-    // creates two iterators to loop through the list of Chunks
-    std::list<Chunk>::iterator currChunk = chunks_.begin();
-    std::list<Chunk>::iterator nextChunk = currChunk;
-    ++nextChunk;
+    std::list<Chunk>::iterator lastChunk = chunks_.end();
+    --lastChunk;
 
-    while(utilization() < 1/4)
+    if(i.chunk_ == lastChunk)
     {
-        if(currChunk->length_ + nextChunk->length_ < CHUNKSIZE)
+        // now points to the Chunk before current chunk
+        --lastChunk;
+        for(size_t ind = 0; ind < i.chunk_->length_; ++ind)
         {
-            // append elements of nextChunk to CurrChunk
-            for(size_t ind = 0; ind < nextChunk->length_; ++ind)
-            {
-                currChunk->chars_[currChunk->length_ + ind] = 
-                nextChunk->chars_[ind];
-            }
+            // append the elements of current chunk to prev chunk
+            lastChunk->chars_[lastChunk->length_ + ind] = 
+            i.chunk_->chars_[ind];
+        }
+        
+        // fix iterator
+        ChunkyString::iterator toReturn = 
+        iterator(lastChunk, lastChunk->length_ + i.charInd_);
 
-            // accounts for the change in length from adding chars
-            currChunk->length_ += nextChunk->length_;
-            nextChunk = chunks_.erase(nextChunk);
-        }
-        else
-        {
-            ++currChunk;
-            ++nextChunk;
-        }
+        // accounts for the change in length from adding chars
+        lastChunk->length_ += i.chunk_->length_;
+        
+        lastChunk = chunks_.erase(i.chunk_);
+
+        return toReturn;
+
     }
+
+    else
+    {
+        // creates iterator to access chars of nextChunk
+        std::list<Chunk>::iterator nextChunk = i.chunk_;
+        ++nextChunk;
+
+        for(size_t ind = 0; ind < nextChunk->length_; ++ind)
+        {
+            // append the elements of next chunk to current chunk
+            i.chunk_->chars_[i.chunk_->length_ + ind] = 
+            nextChunk->chars_[ind];
+        }
+        
+        // accounts for the change in length from adding chars
+        i.chunk_->length_ += nextChunk->length_;
+        
+        chunks_.erase(nextChunk);
+
+        // iterator stays the same
+        return i;
+    }
+
 }
+
 
 void ChunkyString::helperInsert(iterator& i, char c)
 {
@@ -275,12 +319,11 @@ bool ChunkyString::operator<(const ChunkyString& rhs) const
 std::ostream& operator<<(std::ostream& out, 
     const ChunkyString& text)
 {
-    std::string toPrint = "";
     for(ChunkyString::const_iterator i = text.begin(); i != text.end(); ++i)
     {
-        toPrint += *i;
+        out << *i;
     }
-    out << toPrint;
+    
     return out;
 }
 

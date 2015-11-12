@@ -21,7 +21,7 @@
 #define LOAD_GENERIC_STRING 0       // 0 = Normal, 1 = Load Code Dynamically
 #endif
 
-#define INSERT_ERASE 0 // 0 = Do not test. 1 = Do test.
+#define INSERT_ERASE 1 // 0 = Do not test. 1 = Do test.
 #define INSERT_ 1
 
 
@@ -699,6 +699,7 @@ void basicInsertTest(randomness_t action, string origin)
         // We expect half full chunks when inserting only
         checkUtilization(test, 2, origin + ", size:" + stringFrom(i));
     }
+
 }
 
 /// Basic insert tests (with iterator checks)
