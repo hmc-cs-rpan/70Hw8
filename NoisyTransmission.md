@@ -31,3 +31,5 @@ messagepasser -n 0.2 -f myfile.txt, we are running messagepasser with an
 errorRate of 0.2 on a file called myfile.txt. Thus, on whatever text we have in
 myfile.txt, for each char, there will be a 0.2 chance that we erase, a 0.2 
 chance that we double (insert) and a 0.6 chance nothing happens.
+
+We had trouble playing around with noise levels since our erase was segfaulting. Even 0.3 was about how much high it could be to be tolerable to test, but the messages were still pretty clear, once we got them to work.
