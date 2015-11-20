@@ -1,0 +1,35 @@
+FAILURE (after 61 passes): model[i] == *p
+FAILURE (after 61 passes): model[j] == *p
+FAILURE (after 1 passes): stringFrom(chunky) == model
+FAILURE (after 1 passes): i == model.size()
+FAILURE (after 1 passes): *(++(chunky.begin())) == *(++(model.begin()))
+FAILURE (after 61 passes): chunky == ChunkyString()
+FAILURE (after 61 passes): ChunkyString() == chunky
+FAILURE (after 61 passes): chunky != ChunkyString()
+FAILURE (after 61 passes): ChunkyString() != chunky
+FAILURE (after 61 passes): ChunkyString() < chunky
+FAILURE (after 61 passes): chunky.begin() == chunky.end()
+FAILURE (after 61 passes): model < checkChr0
+FAILURE (after 61 passes): checkChr0 < model
+FAILURE (after 122 passes): *(--(chunky.end())) == *(--(model.end()))
+FAILURE (after 192 passes): Incorrect iterator value returned by erase
+
+Summary of Failures
+-------------------
+Fails	/ Total	Issue
+177	/ 3100	*(++(chunky.begin())) == *(++(model.begin()))
+1177	/ 3100	*(--(chunky.end())) == *(--(model.end()))
+50	/ 3100	ChunkyString() != chunky
+50	/ 3100	ChunkyString() < chunky
+50	/ 3100	ChunkyString() == chunky
+898	/ 3050	Incorrect iterator value returned by erase
+50	/ 3100	checkChr0 < model
+50	/ 3100	chunky != ChunkyString()
+50	/ 3100	chunky == ChunkyString()
+50	/ 3100	chunky.begin() == chunky.end()
+2830	/ 3100	i == model.size()
+50	/ 3100	model < checkChr0
+111544	/ 157314	model[i] == *p
+111544	/ 157314	model[j] == *p
+2830	/ 3100	stringFrom(chunky) == model
+

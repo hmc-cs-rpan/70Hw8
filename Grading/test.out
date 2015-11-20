@@ -1,0 +1,65 @@
+Test 1: OK    		(ChunkyString <<, push_back, and iterator test)
+			Command: ./cs70-stringtest 
+
+Test 2: OK    		(ChunkyString <<, push_back, and iterator test [+ valgrind])
+			Command: /usr/bin/valgrind -q ./cs70-stringtest
+
+Test 3: OK    		(insert test, random backish insertion)
+			Command: ./cs70-stringtest -i -b
+
+Test 4: OK    		(insert test, random frontish insertion)
+			Command: ./cs70-stringtest -i -f
+
+Test 5: Failed		(erase test, random backish erasure)
+			Command: ./cs70-stringtest -e -b
+- output differences (combined cout/cerr output)
+
+Test 6: Failed		(erase test, random frontish erasure)
+			Command: ./cs70-stringtest -e -f
+- output differences (combined cout/cerr output)
+
+Test 7: OK    		(insert/push_back test, random backish insertion)
+			Command: ./cs70-stringtest -ip -b
+
+Test 8: OK    		(insert/push_back test, random frontish insertion)
+			Command: ./cs70-stringtest -ip -f
+
+Test 9: OK    		(insert test, middle backish insertion)
+			Command: ./cs70-stringtest --middle -i -b
+
+Test 10: OK    		(insert test, middle frontish insertion)
+			Command: ./cs70-stringtest --middle -i -f
+
+Test 11: Failed		(erase test, middle backish erasure)
+			Command: ./cs70-stringtest --middle -e -b
+- output differences (combined cout/cerr output)
+
+Test 12: Failed		(erase test, middle frontish erasure)
+			Command: ./cs70-stringtest --middle -e -f
+- output differences (combined cout/cerr output)
+
+Test 13: OK    		(insert/push_back test, middle backish insertion)
+			Command: ./cs70-stringtest --middle -ip -b
+
+Test 14: OK    		(insert/push_back test, middle frontish insertion)
+			Command: ./cs70-stringtest --middle -ip -f
+
+Test 15: OK    		(insert test, max backish insertion)
+			Command: ./cs70-stringtest --max -i -b
+
+Test 16: OK    		(insert test, max frontish insertion)
+			Command: ./cs70-stringtest --max -i -f
+
+Test 17: Failed		(erase test, max backish erasure)
+			Command: ./cs70-stringtest --max -e -b
+- output differences (combined cout/cerr output)
+
+Test 18: Failed		(erase test, max frontish erasure)
+			Command: ./cs70-stringtest --max -e -f
+- output differences (combined cout/cerr output)
+
+Test 19: OK    		(insert/push_back test, max backish insertion)
+			Command: ./cs70-stringtest --max -ip -b
+
+Test 20: OK    		(insert/push_back test, max frontish insertion)
+			Command: ./cs70-stringtest --max -ip -f

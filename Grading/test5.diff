@@ -1,0 +1,42 @@
+--- /cs/grader/cs70grad/support/09/testcases/test5.out	2015-09-09 15:40:29.000000000 -0700
++++ test5.out	2015-11-13 16:37:50.000000000 -0800
+@@ -1 +1,38 @@
+-All tests passed!
++FAILURE (after 1 passes): Incorrect iterator value returned by erase
++FAILURE (after 59 passes): stringFrom(chunky) == model
++FAILURE (after 59 passes): i == model.size()
++FAILURE (after 59 passes): chunky.size() == i
++FAILURE (after 59 passes): ChunkyString() < chunky
++FAILURE (after 59 passes): chunky.begin() == chunky.end()
++FAILURE (after 59 passes): *(--(chunky.end())) == *(--(model.end()))
++FAILURE (after 59 passes): *(++(chunky.begin())) == *(++(model.begin()))
++FAILURE (after 59 passes): model < checkChr0
++FAILURE (after 59 passes): checkChr0 < model
++Invalid iterator, please try again
++FAILURE (after 61 passes): chunky == ChunkyString()
++FAILURE (after 61 passes): ChunkyString() == chunky
++FAILURE (after 61 passes): chunky != ChunkyString()
++FAILURE (after 61 passes): ChunkyString() != chunky
++FAILURE (after 3075 passes): model[i] == *p
++FAILURE (after 3038 passes): model[j] == *p
++
++Summary of Failures
++-------------------
++Fails	/ Total	Issue
++1146	/ 3100	*(++(chunky.begin())) == *(++(model.begin()))
++1416	/ 3100	*(--(chunky.end())) == *(--(model.end()))
++50	/ 3100	ChunkyString() != chunky
++51	/ 3100	ChunkyString() < chunky
++50	/ 3100	ChunkyString() == chunky
++356	/ 3050	Incorrect iterator value returned by erase
++51	/ 3100	checkChr0 < model
++50	/ 3100	chunky != ChunkyString()
++50	/ 3100	chunky == ChunkyString()
++51	/ 3100	chunky.begin() == chunky.end()
++3	/ 3100	chunky.size() == i
++2653	/ 3100	i == model.size()
++51	/ 3100	model < checkChr0
++70778	/ 130281	model[i] == *p
++70778	/ 130281	model[j] == *p
++2653	/ 3100	stringFrom(chunky) == model
++
